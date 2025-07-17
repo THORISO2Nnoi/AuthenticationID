@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('/models/User');  // fixed relative path
+const User = require('./models/User');  // fixed relative path
 
 
 // POST /api/register
