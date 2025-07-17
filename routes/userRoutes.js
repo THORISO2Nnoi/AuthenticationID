@@ -1,6 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');  // fixed relative path
+const User = require('/models/User');  // fixed relative path
+
+
+// POST /api/register
+router.post('/register', async (req, res) => {
+  const { idNumber, firstName, lastName, dob } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ idNumber });
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: 'User already exists' });
+    }
+
+    const newUser = new User({ idNumber, firstName, lastName, dob });
+    await newUser.save();
+
+    return res.status(201).json({ success: true, message: 'User registered successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 
 // POST /api/verify
 router.post('/verify', async (req, res) => {
