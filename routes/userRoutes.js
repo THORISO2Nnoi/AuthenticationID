@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('/models/User');
+const User = require('../models/User');  // fixed relative path
 
 // POST /api/verify
 router.post('/verify', async (req, res) => {
@@ -13,30 +13,31 @@ router.post('/verify', async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    if (
-      user.firstName === firstName &&
-      user.lastName === lastName &&
-      user.dob === dob
-    ) {
+    // Normalize strings for comparison
+    const isMatch = 
+      user.firstName.toLowerCase().trim() === firstName.toLowerCase().trim() &&
+      user.lastName.toLowerCase().trim() === lastName.toLowerCase().trim() &&
+      user.dob === dob;  // Assuming dob stored as string in same format
+
+    if (isMatch) {
       return res.json({ success: true, message: 'Details match' });
     } else {
       return res.json({ success: false, message: 'Details do not match' });
     }
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ success: false, message: 'Server error' });
   }
-
 });
 
-// Example GET route
+// GET /api/users
 router.get('/users', async (req, res) => {
   try {
-    const users = await User.find(); // or res.json({ message: "Users route working" });
+    const users = await User.find();
     res.json(users);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
-
 
 module.exports = router;
