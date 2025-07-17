@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
+<<<<<<< HEAD
 const User = require('../models/User');
+=======
+const User = require('./models/User');  // fixed relative path
+
+>>>>>>> 6e9373dc83402b3fa403918c4ce8d49de7143fe1
 
 // POST /api/register
 router.post('/register', async (req, res) => {
